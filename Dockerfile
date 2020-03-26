@@ -98,7 +98,6 @@ RUN apk del .build-deps && \
     rm -fr ModSecurity-nginx && \
     rm -fr GeoIp && \
     rm -fr nginx-$NGINX_VERSION.tar.gz && \
-    rm -fr nginx-$NGINX_VERSION
+    rm -fr nginx-$NGINX_VERSIONi \
 	rm -rf /opt/*.gz
-
 WORKDIR /usr/share/nginx/html

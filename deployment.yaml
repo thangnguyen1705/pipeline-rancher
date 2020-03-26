@@ -1,36 +1,86 @@
-kind: Service
-apiVersion: v1
-metadata:
-  name: helloserver-service
-spec:
-  selector:
-    app: helloserver
-  type: NodePort
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: example-helloserver
+  annotations:
+    deployment.kubernetes.io/revision: "2"
+    field.cattle.io/creatorId: user-njr52
+    field.cattle.io/publicEndpoints: '[{"nodeName":"c-8ftss:m-c2a303539ba7","addresses":["192.168.11.47"],"port":8880,"protocol":"TCP","podName":"p-8fd9f-pipeline:nginx-6b6986f4d9-rwshd","allNodes":false},{"nodeName":"c-8ftss:m-c2a303539ba7","addresses":["192.168.11.47"],"port":8443,"protocol":"TCP","podName":"p-8fd9f-pipeline:nginx-6b6986f4d9-rwshd","allNodes":false}]'
+  creationTimestamp: "2020-03-26T04:36:44Z"
+  generation: 3
   labels:
-    app: helloserver
+    cattle.io/creator: norman
+    workload.user.cattle.io/workloadselector: deployment-p-8fd9f-pipeline-nginx
+  name: nginx
+  namespace: p-8fd9f-pipeline
+  resourceVersion: "1796690"
+  selfLink: /apis/apps/v1/namespaces/p-8fd9f-pipeline/deployments/nginx
+  uid: 1fc18479-8381-420e-ad24-84bf77d3759e
 spec:
+  progressDeadlineSeconds: 600
   replicas: 1
+  revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: helloserver
+      workload.user.cattle.io/workloadselector: deployment-p-8fd9f-pipeline-nginx
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
   template:
     metadata:
+      annotations:
+        cattle.io/timestamp: "2020-03-26T04:37:35Z"
+        field.cattle.io/ports: '[[{"containerPort":80,"dnsName":"nginx-hostport","hostPort":8880,"kind":"HostPort","name":"80tcp88800","protocol":"TCP","sourcePort":8880},{"containerPort":443,"dnsName":"nginx-hostport","hostPort":8443,"kind":"HostPort","name":"443tcp84430","protocol":"TCP","sourcePort":8443}]]'
+      creationTimestamp: null
       labels:
-        app: helloserver
+        workload.user.cattle.io/workloadselector: deployment-p-8fd9f-pipeline-nginx
     spec:
-      imagePullSecrets:
-      - name: pipeline-docker-registry
       containers:
-      - name: helloserver
-        image: ${CICD_IMAGE}:${CICD_EXECUTION_SEQUENCE}
+      - image: wisoez/nginx-modsecurity-crs:latest
+        imagePullPolicy: Always
+        name: nginx
         ports:
         - containerPort: 80
+          hostPort: 8880
+          name: 80tcp88800
+          protocol: TCP
+        - containerPort: 443
+          hostPort: 8443
+          name: 443tcp84430
+          protocol: TCP
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities: {}
+          privileged: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false
+        stdin: true
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        tty: true
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2020-03-26T04:37:33Z"
+    lastUpdateTime: "2020-03-26T04:37:33Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2020-03-26T04:36:44Z"
+    lastUpdateTime: "2020-03-26T04:37:40Z"
+    message: ReplicaSet "nginx-6b6986f4d9" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 3
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

@@ -1,4 +1,6 @@
-FROM golang:1.11
-EXPOSE 80
-COPY ./bin/hello-server /usr/local/bin/
-CMD ["hello-server"]
+FROM php:7.2-apache
+
+RUN apt-get update && \
+    apt-get clean
+
+COPY myapp /var/www/html/

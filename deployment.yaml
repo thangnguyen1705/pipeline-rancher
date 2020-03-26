@@ -1,10 +1,10 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: helloserver-service
+  name: php-example-service
 spec:
   selector:
-    app: helloserver
+    app: php-example
   type: NodePort
   ports:
     - protocol: TCP
@@ -14,23 +14,27 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: example-helloserver
+  name: php-example
   labels:
-    app: helloserver
+    app: php-example
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: helloserver
+      app: php-example
   template:
     metadata:
       labels:
-        app: helloserver
+        app: php-example
     spec:
       imagePullSecrets:
       - name: pipeline-docker-registry
       containers:
-      - name: helloserver
-        image: ${CICD_IMAGE}:${CICD_EXECUTION_SEQUENCE}
+      - name: php
+        image: giaple/demogo:latest
         ports:
         - containerPort: 80
+#      volumes:
+#      - name: demo
+#        persistentVolumeClaim:
+#          claimName: demo

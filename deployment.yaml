@@ -1,10 +1,10 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: php-example-service
+  name: php-thangnv-service
 spec:
   selector:
-    app: php-example
+    app: php-thangnv
   type: NodePort
   ports:
     - protocol: TCP
@@ -14,18 +14,18 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: php-example
+  name: php-thangnv
   labels:
-    app: php-example
+    app: php-thangnv
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: php-example
+      app: php-thangnv
   template:
     metadata:
       labels:
-        app: php-example
+        app: php-thangnv
     spec:
       imagePullSecrets:
       - name: pipeline-docker-registry
